@@ -16,6 +16,9 @@ namespace MyBird
 
         void MoveGround()
         {
+            if(GameManager.IsDeath)
+                return;
+
             transform.Translate(Vector3.left * Time.deltaTime * moveSpeed, Space.World);
 
             if (transform.localPosition.x <= -8.4f)
