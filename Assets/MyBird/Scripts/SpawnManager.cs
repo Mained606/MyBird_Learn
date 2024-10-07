@@ -23,6 +23,8 @@ namespace MyBird
         private float countdown = 0f;
         [SerializeField] private float minSpawnTimer = 0.95f;
         [SerializeField] private float maxSpawnTimer = 1.05f;
+        public static float levelTime = 0f;
+
 
         // 스폰 위치
         [SerializeField] private float maxSpawnY = 3.5f;

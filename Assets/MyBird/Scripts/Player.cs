@@ -24,11 +24,17 @@ namespace MyBird
         //UI
         public GameObject readyUI;
         public GameObject gameOverUI;
+
+        //오디오
+
+        private AudioSource audioSource;
         #endregion
 
         private void Start()
         {
             rb2D = GetComponent<Rigidbody2D>();
+            audioSource = GetComponent<AudioSource>();
+
         }
 
         private void Update()
@@ -55,16 +61,29 @@ namespace MyBird
                 keyJump = false;
             }
         }
-
         //컨트롤 입력
         void InputBird()
         {
             if(GameManager.IsDeath)
                 return;
 
+#if UNITY_EDITOR
             //점프: 스페이스바 또는 마우스 왼클릭
             keyJump |= Input.GetKeyDown(KeyCode.Space);
             keyJump |= Input.GetMouseButtonDown(0);
+#else
+            //터치 인풋
+            if(Input.touchCount > 0)
+            {
+                Touch touch = Input.GetTouch(0);
+
+                if(touch.phase == TouchPhase.Began)
+                {
+                    keyJump |= true;
+                }
+            }
+
+#endif
 
             if (GameManager.IsStart == false && keyJump)
             {
@@ -138,6 +157,17 @@ namespace MyBird
                 return;
             // Debug.Log("점수 획득 처리");
             GameManager.Score++;
+            //오디오 재생
+            audioSource.Play();
+            
+
+            if(GameManager.Score % 10 == 0)
+            {
+                SpawnManager.levelTime += 0.05f;
+            }
+           
+
+            
         }
         //게임 UI
         void MoveStartBird()
