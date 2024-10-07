@@ -21,8 +21,8 @@ namespace MyBird
         //스폰 타이머
         // [SerializeField] private float spawnTimer = 1.0f;
         private float countdown = 0f;
-        [SerializeField] private float minSpawnTimer = 0.95f;
-        [SerializeField] private float maxSpawnTimer = 1.05f;
+        [SerializeField] private float minSpawnTimer = 1.05f;
+        [SerializeField] private float maxSpawnTimer = 1.15f;
         public static float levelTime = 0f;
 
 

@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using UnityEngine.UI;
 namespace MyBird
 {
     public class Player : MonoBehaviour
@@ -24,17 +24,21 @@ namespace MyBird
         //UI
         public GameObject readyUI;
         public GameObject gameOverUI;
-
+        public Image healthImage;
         //오디오
 
         private AudioSource audioSource;
+
+        //체력
+        private float health;
+        private float startHealth = 100;
         #endregion
 
         private void Start()
         {
             rb2D = GetComponent<Rigidbody2D>();
             audioSource = GetComponent<AudioSource>();
-
+            health = startHealth;
         }
 
         private void Update()
@@ -71,6 +75,7 @@ namespace MyBird
             //점프: 스페이스바 또는 마우스 왼클릭
             keyJump |= Input.GetKeyDown(KeyCode.Space);
             keyJump |= Input.GetMouseButtonDown(0);
+            
 #else
             //터치 인풋
             if(Input.touchCount > 0)
@@ -112,8 +117,8 @@ namespace MyBird
             {
                 degree = -rotateSpeed;
             }
-
-            float rotationZ = Mathf.Clamp(birdRotain.z + degree, -90f, 30f);
+            //최대 회전 각도 제한
+            float rotationZ = Mathf.Clamp(birdRotain.z + degree, -80f, 25f);
             birdRotain = new Vector3(0f, 0f, rotationZ);
             transform.eulerAngles = birdRotain;
         }
@@ -161,7 +166,7 @@ namespace MyBird
             audioSource.Play();
             
 
-            if(GameManager.Score % 10 == 0)
+            if(GameManager.Score % 20 == 0)
             {
                 SpawnManager.levelTime += 0.05f;
             }
@@ -181,7 +186,14 @@ namespace MyBird
         {
             if (collider.tag == "Pipe")
             {
-                DeathBird();
+                if(health <= 0)
+                {
+                    DeathBird();
+                }
+                else
+                {
+                    TakeDamage(55f);
+                }
             }
             else if (collider.tag == "Point")
             {
@@ -194,8 +206,22 @@ namespace MyBird
         {
             if (collision.gameObject.tag == "Ground")
             {
-                DeathBird();
+                if(health <= 0)
+                {
+                    DeathBird();
+                }
+                else
+                {
+                    TakeDamage(55f);
+                }
             }
+        }
+
+        //체력 감소
+        void TakeDamage(float damage)
+        {
+            health -= damage;
+            healthImage.fillAmount = health / 100f;
         }
     }
 }
